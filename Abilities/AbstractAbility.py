@@ -47,3 +47,6 @@ class AbstractAbility:
 
     def on_defend(self, player, target):
         pass
+
+    def on_removed_ability(self, player):
+        pass

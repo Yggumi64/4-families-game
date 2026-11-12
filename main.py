@@ -6,7 +6,7 @@ from game_factory import export_players, KEY_MAPPING, SCREEN_SIZE
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
-pygame.display.set_caption("4 Mains - Choix simultanés")
+pygame.display.set_caption("Game Jam")
 
 player_choices = {
     "Player 1": None,
@@ -38,7 +38,7 @@ while running:
             for p in players:
                 if p.name == cible:
                     player_choices[joueur] = p
-                    print(f"{joueur} a choisi {cible}")
+                    print(f"{joueur} a choisi sa cible.")
 
     # --- Logique ---
     if etat == CHOIX:

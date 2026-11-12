@@ -43,6 +43,10 @@ class Unite:
         dy = target.y - self._pos.y
         return dx != 0 and dy != 0
 
+    def get_midpoint(self, other_unite):
+        pos = self._pos.lerp(other_unite.pos, 0.5)
+        return int(pos.x), int(pos.y)
+
     def move_to(self, target, dt, speed):
         if self.is_diagonal(target):
             speed = ((speed**2)*2)**0.5

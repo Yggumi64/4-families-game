@@ -59,7 +59,8 @@ class Player:
             if self._target == self:
                 for ability in self.abilities:
                     ability.on_defend(self, targets)
-                print(f"{self._name} choose defense.")
+                return "defense"
+                # print(f"{self._name} choose defense.")
 
             # Attaque un joueur qui se défend
             else:
@@ -71,23 +72,24 @@ class Player:
                 if target_action == self._target or target_action == self:
                     for ability in self.abilities:
                         ability.on_clash(self, targets)
-                    print(f"{self._name} have encountered {self._target.name}. They clash.")
+                    return "clash"
+                    # print(f"{self._name} have encountered {self._target.name}. They clash.")
 
                 # Parvient à attaquer un joueur
                 else:
                     for ability in self.abilities:
                         ability.on_deal_damage(self, targets)
                     self._target.take_damage(self._damage)
-                    print(f"{self._name} is moving towards {self._target.name}.")
-                    print(f"{self._target.name} took {self._damage} damage. Remaining life: {self._target.life}.")
+                    return "attack"
+                    # print(f"{self._name} is moving towards {self._target.name}.")
+                    # print(f"{self._target.name} took {self._damage} damage. Remaining life: {self._target.life}.")
 
 
     def start_turn(self):
-        self._life = self._faction.base_life
-        self._damage = self._faction.base_damage
         for ability in list(self.abilities):
             ability.on_turn_start(self)
             if not ability.lower_duration():
+                ability.on_removed_ability(self)
                 self.abilities.remove(ability)
                 print(f"{self._name}'s ability {ability.name} has expired.")
 

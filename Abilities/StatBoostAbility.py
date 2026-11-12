@@ -18,6 +18,10 @@ class StatBoostAbility(AbstractAbility):
     def damage_boost(self):
         return self._damage_boost
 
+    def on_removed_ability(self, player):
+        player.alterLife(-self._life_boost)
+        player.alterDamage(-self._damage_boost)
+
     @override
     def on_turn_start(self, player):
         player.alterLife(self._life_boost)
