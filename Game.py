@@ -16,7 +16,7 @@ class Game:
         for player in self._players:
             player.end_turn()
         
-        #self.game_status()
+        self.game_status()
 
     def game_status(self):
         for player in self._players:

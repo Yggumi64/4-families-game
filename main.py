@@ -16,55 +16,54 @@ player_choices = {
 }
 
 players = export_players()
-
 board = Board(players)
 game = Game(players, board)
 
 running = True
-en_attente_des_choix = True
-clock = pygame.time.Clock()
+
+CHOIX, ALLER, RETOUR = "choix", "aller", "retour"
+etat = CHOIX
 SPEED_LINE = 150
+clock = pygame.time.Clock()
 
 while running:
-
-    # Init screen
     dt = clock.tick(60) / 1000
 
-    screen.fill("purple")
-
-    for player in players:# Init screen
-        pygame.draw.circle(screen, player.faction.color, player.unite.pos, 40)
-
-    # Ask for target
+    # --- Événements ---
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN and en_attente_des_choix:
-            if event.key in KEY_MAPPING:
-                player, choice = KEY_MAPPING[event.key]
-                for p in players:
-                    if choice == p.name:
-                        player_choices[player] = p
-                        print(f"{player} a choisi")
+        elif event.type == pygame.KEYDOWN and etat == CHOIX and event.key in KEY_MAPPING:
+            joueur, cible = KEY_MAPPING[event.key]
+            for p in players:
+                if p.name == cible:
+                    player_choices[joueur] = p
+                    print(f"{joueur} a choisi {cible}")
 
-    # Play a turn
-    if all(choice is not None for choice in player_choices.values()):
-        en_attente_des_choix = False
-        #print("Tous les joueurs ont fait leur choix :")
-        #for player, target in player_choices.items():
-            #print(f"{player} a choisi {target.name}")
-        game.play(player_choices)
+    # --- Logique ---
+    if etat == CHOIX:
+        if all(c is not None for c in player_choices.values()):
+            game.play(player_choices)
+            etat = ALLER
 
-        arrived = 0
-        for player in players:
-            if player.unite.move_to(dt, SPEED_LINE):
-                arrived += 1
+    elif etat == ALLER:
+        arrives = [p.unite.move_to(p.unite.target_pos, dt, SPEED_LINE) for p in players]
+        if all(arrives):
+            etat = RETOUR
 
-        if arrived == len(players):
-            en_attente_des_choix = True
-            for player in players:
-                player.set_target(player)
-            player_choices = {player.name: None for player in players}
-        
+    elif etat == RETOUR:
+        arrives = [p.unite.move_to(p.unite.home_pos, dt, SPEED_LINE) for p in players]
+        if all(arrives):
+            game.play(player_choices)
+            for p in players:
+                p.set_target(p)
+            player_choices = {p.name: None for p in players}
+            etat = CHOIX
 
+    # --- Dessin ---
+    screen.fill("purple")
+    for p in players:
+        pygame.draw.circle(screen, p.faction.color, p.unite.pos, 40)
     pygame.display.flip()
+
+pygame.quit()
