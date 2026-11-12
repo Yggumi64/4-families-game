@@ -1,3 +1,4 @@
+from Entities.Unite import Unite
 import pygame
 
 from Board import Board
@@ -32,13 +33,28 @@ KEY_MAPPING = {
     pygame.K_m: ("Player 4", "Player 4"),
 }
 
+SCREEN_SIZE = 1500
+
 life_boost_ability = StatBoostAbility("Life Boost", "Increases life by 3", 3, 0, None)
 damage_boost_ability = StatBoostAbility("Damage Boost", "Increases damage by 1", 0, 1, None)
 
 base_life = 12
 base_damage = 3
 
-pld = Faction("Paladin", "A holy warrior", base_life, base_damage, life_boost_ability)
-vpr = Faction("Vampire", "A bloodsucking creature of the night", base_life, base_damage)
-ext = Faction("Executioner", "A ruthless killer", base_life, base_damage, damage_boost_ability)
-mag = Faction("Mage", "A master of the arcane arts", base_life, base_damage)
+pld = Faction("Paladin", "A holy warrior", "yellow", base_life, base_damage, life_boost_ability)
+vpr = Faction("Vampire", "A bloodsucking creature of the night", "red", base_life, base_damage)
+ext = Faction("Executioner", "A ruthless killer", "black", base_life, base_damage, damage_boost_ability)
+mag = Faction("Mage", "A master of the arcane arts", "blue", base_life, base_damage)
+
+u1 = Unite(100, 100)
+u2 = Unite(SCREEN_SIZE-100, 100)
+u3 = Unite(100, SCREEN_SIZE-100)
+u4 = Unite(SCREEN_SIZE-100, SCREEN_SIZE-100)
+
+p1 = Player("Player 1", pld, u1)
+p2 = Player("Player 2", vpr, u2)
+p3 = Player("Player 3", ext, u3)
+p4 = Player("Player 4", mag, u4)
+
+def export_players():
+    return [p1, p2, p3, p4]

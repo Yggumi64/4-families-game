@@ -1,7 +1,8 @@
 class Player:
-    def __init__(self, name, faction, life = 0, damage = 0):
+    def __init__(self, name, faction, unite, life = 0, damage = 0):
         self._name = name
         self._faction = faction
+        self._unite = unite
         self._life = life + faction.base_life
         self._damage = damage + faction.base_damage
         self.abilities = []
@@ -14,6 +15,14 @@ class Player:
         return self._name
 
     @property
+    def faction(self):
+        return self._faction
+
+    @property
+    def unite(self):
+        return self._unite
+
+    @property
     def life(self):
         return self._life
 
@@ -24,10 +33,6 @@ class Player:
     @property
     def target(self):
         return self._target
-
-    @property
-    def faction(self):
-        return self._faction
 
     def set_target(self, target : "Player"):
         self._target = target

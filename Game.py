@@ -6,7 +6,9 @@ class Game:
     def play(self, targets):
         for player in self._players:
             player.start_turn()
-            player.set_target(targets[player.name])
+            target = targets[player.name]
+            player.set_target(target)
+            player.unite.set_target_pos(target.unite.pos_x, target.unite.pos_y)
 
         for player in self._players:
             player.mouvement(targets)
@@ -14,7 +16,7 @@ class Game:
         for player in self._players:
             player.end_turn()
         
-        self.game_status()
+        #self.game_status()
 
     def game_status(self):
         for player in self._players:
