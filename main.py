@@ -1,15 +1,14 @@
 import pygame
 
-from Board import Board
 from Game import Game
-from game_factory import KEY_MAPPING, SCREEN_SIZE, export_players
+from game_factory import KEY_MAPPING, SCREEN_SIZE, export_game
 from ScreenStorer import ScreenStorer
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 pygame.display.set_caption("Game Jam")
 screen_storer = ScreenStorer()
-screen_storer.set_screen(screen)
+screen_storer.screen = screen
 
 player_choices = {
     "Player 1": None,
@@ -18,9 +17,9 @@ player_choices = {
     "Player 4": None
 }
 
-players = export_players()
-board = Board(players)
+players, board = export_game()
 game = Game(players, board)
+game.game_status()
 
 running = True
 
@@ -65,6 +64,7 @@ while running:
     # --- Dessin ---
     screen.fill("gray")
     screen_storer.castle_value(players)
+    screen_storer.draw_bonus(game.board)
     for p in players:
         p.unite.draw(screen, p)
     

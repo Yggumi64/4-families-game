@@ -3,7 +3,16 @@ class Game:
         self._players = players
         self._board = board
 
+    @property
+    def players(self):
+        return self._players
+
+    @property
+    def board(self):
+        return self._board
+
     def play(self, targets):
+
         for player in self._players:
             player.start_turn()
             target = targets[player.name]
@@ -15,11 +24,16 @@ class Game:
             if mvt == "clash_on_battlefield":
                 pos_x, pos_y = player.unite.get_midpoint(player._target.unite)
                 player.unite.set_target_pos(pos_x, pos_y)
+            bonuses = self._board.get_bonuses_in_path(player.castle_pos, target.castle_pos)
+            print(player, bonuses)
+            player.get_bonuses(bonuses)
 
         for player in self._players:
             player.end_turn()
         
         self.game_status()
+
+        self._board.spawn_random_bonus()
 
     def game_status(self):
         for player in self._players:

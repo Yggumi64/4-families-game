@@ -5,9 +5,6 @@ class ScreenStorer:
     def __init__(self):
         self.screen = None
 
-    def set_screen(self, screen):
-        self.screen = screen
-
     @property
     def screen(self):
         return self._screen
@@ -67,3 +64,30 @@ class ScreenStorer:
         text_surf_global = font.render("En attente des choix...", True, (255, 255, 255))
         text_rect_global = text_surf_global.get_rect(center=(width // 2, (height // 2) - 80))
         self._screen.blit(text_surf_global, text_rect_global)
+
+    def transpos_board_to_screen(self, pos, board):
+        if self._screen is None:
+            return (0, 0)
+
+        board_x, board_y = pos
+        board_size = len(board.board)
+
+        margin = 100
+        width = self._screen.get_width() - (2 * margin)
+        height = self._screen.get_height() - (2 * margin)
+
+        step_x = width / (board_size-1)
+        step_y = height / (board_size-1)
+
+        screen_x = margin + (board_x * step_x)
+        screen_y = margin + (board_y * step_y)
+
+        return int(screen_x), int(screen_y)
+
+
+    def draw_bonus(self, board):
+        bonuses = board.bonuses
+        for pos in bonuses:
+            transpo_pos = self.transpos_board_to_screen(pos, board)
+            color = bonuses[pos].color
+            pygame.draw.circle(self._screen, color, transpo_pos, 40)
