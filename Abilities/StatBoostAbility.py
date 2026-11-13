@@ -9,6 +9,7 @@ class StatBoostAbility(AbstractAbility):
         super().__init__(name, description, duration, "StatBoostAbility")
         self._life_boost = life_boost
         self._damage_boost = damage_boost
+        self._active = False
 
     @property
     def life_boost(self):
@@ -18,11 +19,15 @@ class StatBoostAbility(AbstractAbility):
     def damage_boost(self):
         return self._damage_boost
 
+    @override
     def on_removed_ability(self, player):
+        self._active = False
         player.alterLife(-self._life_boost)
         player.alterDamage(-self._damage_boost)
 
     @override
     def on_turn_start(self, player):
-        player.alterLife(self._life_boost)
-        player.alterDamage(self._damage_boost)
+        if not self._active:
+            self._active = True
+            player.alterLife(self._life_boost)
+            player.alterDamage(self._damage_boost)

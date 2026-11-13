@@ -1,11 +1,9 @@
-from Entities.Unite import Unite
 import pygame
 
-from Board import Board
-from Game import Game
 from Abilities.StatBoostAbility import StatBoostAbility
 from Entities.Faction import Faction
 from Entities.Player import Player
+from Entities.Unite import Unite
 
 KEY_MAPPING = {
     # Joueur 1 (Zone AZQS)
@@ -33,7 +31,7 @@ KEY_MAPPING = {
     pygame.K_m: ("Player 4", "Player 4"),
 }
 
-SCREEN_SIZE = 1500
+SCREEN_SIZE = 800
 
 life_boost_ability = StatBoostAbility("Life Boost", "Increases life by 3", 3, 0, None)
 damage_boost_ability = StatBoostAbility("Damage Boost", "Increases damage by 1", 0, 1, None)

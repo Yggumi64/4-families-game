@@ -12,7 +12,7 @@ class Game:
 
         for player in self._players:
             mvt = player.mouvement(targets)
-            if mvt == "clash":
+            if mvt == "clash_on_battlefield":
                 pos_x, pos_y = player.unite.get_midpoint(player._target.unite)
                 player.unite.set_target_pos(pos_x, pos_y)
 

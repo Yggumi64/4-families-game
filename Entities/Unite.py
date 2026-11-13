@@ -1,5 +1,4 @@
 import pygame
-from Entities.Player import Player
 
 
 class Unite:

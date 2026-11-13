@@ -72,7 +72,10 @@ class Player:
                 if target_action == self._target or target_action == self:
                     for ability in self.abilities:
                         ability.on_clash(self, targets)
-                    return "clash"
+                    if target_action == self:
+                        return "clash_on_battlefield"
+                    else:
+                        return "clash_on_castle"
                     # print(f"{self._name} have encountered {self._target.name}. They clash.")
 
                 # Parvient à attaquer un joueur
@@ -89,8 +92,8 @@ class Player:
         for ability in list(self.abilities):
             ability.on_turn_start(self)
             if not ability.lower_duration():
-                ability.on_removed_ability(self)
                 self.abilities.remove(ability)
+                self.abilities.on_removed_ability(self)
                 print(f"{self._name}'s ability {ability.name} has expired.")
 
 

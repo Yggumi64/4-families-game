@@ -2,11 +2,14 @@ import pygame
 
 from Board import Board
 from Game import Game
-from game_factory import export_players, KEY_MAPPING, SCREEN_SIZE
+from game_factory import KEY_MAPPING, SCREEN_SIZE, export_players
+from ScreenStorer import ScreenStorer
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 pygame.display.set_caption("Game Jam")
+screen_storer = ScreenStorer()
+screen_storer.set_screen(screen)
 
 player_choices = {
     "Player 1": None,
@@ -42,6 +45,7 @@ while running:
 
     # --- Logique ---
     if etat == CHOIX:
+        screen_storer.waiting_for_player(" et ".join([f"{j} ({c.name})" for j, c in player_choices.items() if c is not None]))
         if all(c is not None for c in player_choices.values()):
             game.play(player_choices)
             etat = ALLER
@@ -54,7 +58,6 @@ while running:
     elif etat == RETOUR:
         arrives = [p.unite.move_to(p.unite.home_pos, dt, SPEED_LINE) for p in players]
         if all(arrives):
-            game.play(player_choices)
             for p in players:
                 p.set_target(p)
             player_choices = {p.name: None for p in players}
