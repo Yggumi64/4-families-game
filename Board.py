@@ -55,6 +55,7 @@ class Board:
     def get_bonuses_in_path(self, start_grid_pos, target_grid_pos):
         path = self.get_path_cells(start_grid_pos, target_grid_pos)
         taken_bonuses = []
+        print(f"bonus : {self._bonuses}, chemin : {path}")
         for pos in path:
             if pos in self._bonuses:
                 taken_bonuses.append(self._bonuses[pos].ability)

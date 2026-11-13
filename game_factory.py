@@ -59,19 +59,20 @@ board.spawn_random_bonus()
 board.spawn_random_bonus()
 
 angles = Angle()
-HOME = 100
+GAP = 100
 
-u1 = Unite(angles.up_left, HOME, SCREEN_SIZE)
-u2 = Unite(angles.up_right, HOME, SCREEN_SIZE)
-u3 = Unite(angles.down_left, HOME, SCREEN_SIZE)
-u4 = Unite(angles.down_right, HOME, SCREEN_SIZE)
+u1 = Unite(angles.up_left, GAP, SCREEN_SIZE)
+u2 = Unite(angles.up_right, GAP, SCREEN_SIZE)
+u3 = Unite(angles.down_left, GAP, SCREEN_SIZE)
+u4 = Unite(angles.down_right, GAP, SCREEN_SIZE)
 
 BOARD_SIZE = len(board.board)
+MAX_INDEX = BOARD_SIZE-1
 
-p1 = Player("Player 1", 1, pld, u1, (u1.angle[0]*BOARD_SIZE, u1.angle[1]*BOARD_SIZE))
-p2 = Player("Player 2", 2, vpr, u2, (u2.angle[0]*BOARD_SIZE, u2.angle[1]*BOARD_SIZE))
-p3 = Player("Player 3", 3, ext, u3, (u3.angle[0]*BOARD_SIZE, u3.angle[1]*BOARD_SIZE))
-p4 = Player("Player 4", 4, mag, u4, (u4.angle[0]*BOARD_SIZE, u4.angle[1]*BOARD_SIZE))
+p1 = Player("Player 1", 1, pld, u1, (u1.angle[0]*MAX_INDEX, u1.angle[1]*MAX_INDEX))
+p2 = Player("Player 2", 2, vpr, u2, (u2.angle[0]*MAX_INDEX, u2.angle[1]*MAX_INDEX))
+p3 = Player("Player 3", 3, ext, u3, (u3.angle[0]*MAX_INDEX, u3.angle[1]*MAX_INDEX))
+p4 = Player("Player 4", 4, mag, u4, (u4.angle[0]*MAX_INDEX, u4.angle[1]*MAX_INDEX))
 
 players =  [p1, p2, p3, p4]
 board.players = players

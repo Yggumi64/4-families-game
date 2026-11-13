@@ -2,9 +2,9 @@ import pygame
 
 
 class Unite:
-    def __init__(self, angle, home, screen_size):
+    def __init__(self, angle, gap, screen_size):
         self._angle = angle
-        self._pos_x, self._pos_y = self.calculate_home_position(angle, home, screen_size)
+        self._pos_x, self._pos_y = self.calculate_home_position(angle, gap, screen_size)
         self._home_pos = pygame.Vector2(self._pos_x, self._pos_y)
         self._pos = pygame.Vector2(self._pos_x, self._pos_y)
         self._target_pos = pygame.Vector2(self._pos_x, self._pos_y)
@@ -33,12 +33,12 @@ class Unite:
     def target_pos(self):
         return self._target_pos
 
-    def calculate_home_position(self, angle, home, screen_size):
+    def calculate_home_position(self, angle, gap, screen_size):
         dir_x = (angle[0] * 2) - 1
         dir_y = (angle[1] * 2) - 1
         
-        x = angle[0] * screen_size - home*dir_x
-        y = angle[1] * screen_size - home*dir_y
+        x = angle[0] * screen_size - gap*dir_x
+        y = angle[1] * screen_size - gap*dir_y
         return x, y
 
     def set_target_pos(self, target_x, target_y):

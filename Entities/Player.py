@@ -10,7 +10,7 @@ class Player:
         self._abilities = []
         if faction.passive_ability:
             self._abilities.append(faction.passive_ability)
-            self.start_turn()
+            faction.passive_ability.on_ability_granted(self)
         self._target = self
 
     @property
@@ -98,14 +98,16 @@ class Player:
                     for ability in self._abilities:
                         ability.on_deal_damage(self, targets)
                     self._target.take_damage(self._damage)
+                    # print(f"{self._target.name} took {self._damage} damage. Remaining life: {self._target.life}.")
                     return "attack"
                     # print(f"{self._name} is moving towards {self._target.name}.")
-                    # print(f"{self._target.name} took {self._damage} damage. Remaining life: {self._target.life}.")
+                    
 
     def get_bonuses(self, bonuses):
         for ability in bonuses:
-            print(f"{ability.name} granted to {self._name}")
+            # print(f"{ability.name} granted to {self._name}")
             self._abilities.append(ability)
+            ability.on_ability_granted(self)
 
     def start_turn(self):
         for ability in list(self._abilities):
@@ -121,4 +123,4 @@ class Player:
             ability.on_turn_end(self)
 
     def __str__(self):
-        return f"Player: {self._name}, Faction: {self._faction.name}, Life: {self._life}, Damage: {self._damage}"
+        return f"Player: {self._name}, Faction: {self._faction.name}, Life: {self._life}, Damage: {self._damage}, Bonus: {[j.name for j in self._abilities]}"

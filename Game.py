@@ -21,10 +21,17 @@ class Game:
 
         for player in self._players:
             mvt = player.mouvement(targets)
+            
+            target_grid_pos = player.target.castle_pos
             if mvt == "clash_on_battlefield":
                 pos_x, pos_y = player.unite.get_midpoint(player._target.unite)
                 player.unite.set_target_pos(pos_x, pos_y)
-            bonuses = self._board.get_bonuses_in_path(player.castle_pos, target.castle_pos)
+
+                x1, y1 = player.castle_pos
+                x2, y2 = target_grid_pos
+                target_grid_pos = (round((x1 + x2) / 2), round((y1 + y2) / 2))
+
+            bonuses = self._board.get_bonuses_in_path(player.castle_pos, target_grid_pos)
             print(player, bonuses)
             player.get_bonuses(bonuses)
 
