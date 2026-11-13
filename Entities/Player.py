@@ -1,6 +1,7 @@
 class Player:
-    def __init__(self, name, faction, unite, life = 0, damage = 0):
+    def __init__(self, name, n, faction, unite, life = 0, damage = 0):
         self._name = name
+        self._number = n
         self._faction = faction
         self._unite = unite
         self._life = life + faction.base_life
@@ -8,12 +9,17 @@ class Player:
         self.abilities = []
         if faction.passive_ability:
             self.abilities.append(faction.passive_ability)
+            self.start_turn()
         self._target = self
 
     @property
     def name(self):
         return self._name
 
+    @property
+    def number(self):
+        return self._number
+    
     @property
     def faction(self):
         return self._faction

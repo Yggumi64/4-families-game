@@ -1,6 +1,7 @@
 import pygame
 
 from Abilities.StatBoostAbility import StatBoostAbility
+from Entities.Angle import Angle
 from Entities.Faction import Faction
 from Entities.Player import Player
 from Entities.Unite import Unite
@@ -44,15 +45,18 @@ vpr = Faction("Vampire", "A bloodsucking creature of the night", "red", base_lif
 ext = Faction("Executioner", "A ruthless killer", "black", base_life, base_damage, damage_boost_ability)
 mag = Faction("Mage", "A master of the arcane arts", "blue", base_life, base_damage)
 
-u1 = Unite(100, 100)
-u2 = Unite(SCREEN_SIZE-100, 100)
-u3 = Unite(100, SCREEN_SIZE-100)
-u4 = Unite(SCREEN_SIZE-100, SCREEN_SIZE-100)
+angles = Angle()
+HOME = 100
 
-p1 = Player("Player 1", pld, u1)
-p2 = Player("Player 2", vpr, u2)
-p3 = Player("Player 3", ext, u3)
-p4 = Player("Player 4", mag, u4)
+u1 = Unite(angles.up_left, HOME, SCREEN_SIZE)
+u2 = Unite(angles.up_right, HOME, SCREEN_SIZE)
+u3 = Unite(angles.down_left, HOME, SCREEN_SIZE)
+u4 = Unite(angles.down_right, HOME, SCREEN_SIZE)
+
+p1 = Player("Player 1", 1, pld, u1)
+p2 = Player("Player 2", 2, vpr, u2)
+p3 = Player("Player 3", 3, ext, u3)
+p4 = Player("Player 4", 4, mag, u4)
 
 def export_players():
     return [p1, p2, p3, p4]

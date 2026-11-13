@@ -2,12 +2,16 @@ import pygame
 
 
 class Unite:
-    def __init__(self, pos_x, pos_y):
-        self._pos_x = pos_x
-        self._pos_y = pos_y
+    def __init__(self, angle, home, screen_size):
+        self._angle = angle
+        self._pos_x, self._pos_y = self.calculate_home_position(angle, home, screen_size)
         self._home_pos = pygame.Vector2(self._pos_x, self._pos_y)
         self._pos = pygame.Vector2(self._pos_x, self._pos_y)
         self._target_pos = pygame.Vector2(self._pos_x, self._pos_y)
+
+    @property
+    def angle(self):
+        return self._angle
 
     @property
     def pos_x(self):
@@ -28,6 +32,14 @@ class Unite:
     @property
     def target_pos(self):
         return self._target_pos
+
+    def calculate_home_position(self, angle, home, screen_size):
+        dir_x = (angle[0] * 2) - 1
+        dir_y = (angle[1] * 2) - 1
+        
+        x = angle[0] * screen_size - home*dir_x
+        y = angle[1] * screen_size - home*dir_y
+        return x, y
 
     def set_target_pos(self, target_x, target_y):
         self._target_pos.update(target_x, target_y)
@@ -57,3 +69,11 @@ class Unite:
             return True
         self._pos += direction / distance * step
         return False
+
+    def draw(self, screen, p):
+        pygame.draw.circle(screen, p.faction.color, self._pos, 40)
+
+        font = pygame.font.Font(None, 36)
+        text_surf = font.render(str(p.damage), True, (255, 255, 255))
+        text_rect = text_surf.get_rect(center=(self._pos.x, self._pos.y))
+        screen.blit(text_surf, text_rect)

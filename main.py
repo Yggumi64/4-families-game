@@ -26,7 +26,7 @@ running = True
 
 CHOIX, ALLER, RETOUR = "choix", "aller", "retour"
 etat = CHOIX
-SPEED_LINE = 150
+SPEED_LINE = 200
 clock = pygame.time.Clock()
 
 while running:
@@ -45,7 +45,6 @@ while running:
 
     # --- Logique ---
     if etat == CHOIX:
-        screen_storer.waiting_for_player(" et ".join([f"{j} ({c.name})" for j, c in player_choices.items() if c is not None]))
         if all(c is not None for c in player_choices.values()):
             game.play(player_choices)
             etat = ALLER
@@ -64,9 +63,16 @@ while running:
             etat = CHOIX
 
     # --- Dessin ---
-    screen.fill("purple")
+    screen.fill("gray")
+    screen_storer.castle_value(players)
     for p in players:
-        pygame.draw.circle(screen, p.faction.color, p.unite.pos, 40)
+        p.unite.draw(screen, p)
+    
+    if etat == CHOIX:
+        joueurs_en_attente = [j for j, c in player_choices.items() if c is None]
+        joueurs_en_attente = [j for j in players if j.name in joueurs_en_attente]
+        screen_storer.waiting_for_player(joueurs_en_attente)
+
     pygame.display.flip()
 
 pygame.quit()
