@@ -10,16 +10,12 @@ pygame.display.set_caption("Game Jam")
 screen_storer = ScreenStorer()
 screen_storer.screen = screen
 
-player_choices = {
-    "Player 1": None,
-    "Player 2": None,
-    "Player 3": None,
-    "Player 4": None
-}
-
 players, board = export_game()
 game = Game(players, board)
 game.game_status()
+
+player_choices = {player: None for player in players}
+player_by_name = {player.name: player for player in players}
 
 running = True
 
@@ -39,12 +35,12 @@ while running:
             joueur, cible = KEY_MAPPING[event.key]
             for p in players:
                 if p.name == cible:
-                    player_choices[joueur] = p
+                    player_choices[player_by_name[joueur]] = p
                     print(f"{joueur} a choisi sa cible.")
 
     # --- Logique ---
     if etat == CHOIX:
-        if all(c is not None for c in player_choices.values()):
+        if all(choice is not None for choice in player_choices.values()):
             game.play(player_choices)
             etat = ALLER
 
@@ -58,7 +54,7 @@ while running:
         if all(arrives):
             for p in players:
                 p.set_target(p)
-            player_choices = {p.name: None for p in players}
+            player_choices = {p: None for p in players}
             etat = CHOIX
 
     # --- Dessin ---
@@ -69,8 +65,8 @@ while running:
         p.unite.draw(screen, p)
     
     if etat == CHOIX:
-        joueurs_en_attente = [j for j, c in player_choices.items() if c is None]
-        joueurs_en_attente = [j for j in players if j.name in joueurs_en_attente]
+        joueurs_en_attente = [j for j, choice in player_choices.items() if choice is None]
+        joueurs_en_attente = [j for j in players if j in joueurs_en_attente]
         screen_storer.waiting_for_player(joueurs_en_attente)
 
     pygame.display.flip()

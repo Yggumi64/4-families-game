@@ -55,7 +55,6 @@ class Board:
     def get_bonuses_in_path(self, start_grid_pos, target_grid_pos):
         path = self.get_path_cells(start_grid_pos, target_grid_pos)
         taken_bonuses = []
-        print(f"bonus : {self._bonuses}, chemin : {path}")
         for pos in path:
             if pos in self._bonuses:
                 taken_bonuses.append(self._bonuses[pos].ability)
@@ -71,7 +70,7 @@ class Board:
                 if self._board[y][x] == '?':
                     empty_cells.append((x, y))
                     
-        if empty_cells:
+        if empty_cells and random.Random(0.5):
             x, y = random.choice(empty_cells)
             self._board[y][x] = 'B'
             self._bonuses[(x, y)] = self.get_random_bonus()

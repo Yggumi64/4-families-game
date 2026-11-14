@@ -55,11 +55,19 @@ class Player:
     def alterLife(self, amount):
         self._life += amount
         self._life = max(self._life, 0)
+        if amount > 0:
+            print(f"{self.name} gain {amount} life")
+        else:
+            print(f"{self.name} lose {amount*(-1)} life")
         return self._life
 
     def alterDamage(self, amount):
         self._damage += amount
         self._damage = max(self._damage, 0)
+        if amount > 0:
+            print(f"{self.name} gain {amount} bonus damage")
+        else:
+            print(f"{self.name} lose {amount*(-1)} damage")
         return self._damage
 
     def take_damage(self, damage):
@@ -67,40 +75,60 @@ class Player:
             ability.on_receive_damage(self, self._target)
         self.alterLife(-damage)
         return self._life
-    
+
+    def defend(self, targets):
+        targeting_self = []
+        for player in targets:
+            if targets[player] == self and player != self:
+                targeting_self.append(player)
+
+        if len(targeting_self) != 0:
+            for ability in self._abilities:
+                ability.on_castle_defense(self, targeting_self)
+
+        for ability in self._abilities:
+            ability.on_defend(self, targets)
+
+        # print(f"{self._name} choose defense.")
+        return "defense"
+
+    def encounter(self):
+        # print(f"{self._name} have encountered {self._target.name}. They clash.")
+        if self._target.target == self:
+            for ability in self._abilities:
+                ability.on_battle_clash(self, self._target)
+            return "clash_on_battlefield"
+        else:
+            for ability in self._abilities:
+                ability.on_castle_clash(self, self._target)
+            return "clash_on_castle"
+
+    def attack(self):
+        for ability in self._abilities:
+            ability.on_deal_damage(self, self._target)
+        self._target.take_damage(self._damage)
+        # print(f"{self._target.name} took {self._damage} damage. Remaining life: {self._target.life}.")
+        return "attack"
+        
     def mouvement(self, targets):
         if self._target.target is not None:
             # Se défend
             if self._target == self:
-                for ability in self._abilities:
-                    ability.on_defend(self, targets)
-                return "defense"
-                # print(f"{self._name} choose defense.")
+                self.defend(targets)
 
-            # Attaque un joueur qui se défend
+            # Attaque un joueur
             else:
+                # print(f"{self._name} is moving towards {self._target.name}.")
                 for ability in self._abilities:
                     ability.on_mouvement(self, targets)
 
-                # Rencontre un joueur lors de l'attaque
-                target_action = self._target.target
-                if target_action == self._target or target_action == self:
-                    for ability in self._abilities:
-                        ability.on_clash(self, targets)
-                    if target_action == self:
-                        return "clash_on_battlefield"
-                    else:
-                        return "clash_on_castle"
-                    # print(f"{self._name} have encountered {self._target.name}. They clash.")
+                # clash
+                if self._target.target == self._target or self._target.target == self:
+                    self.encounter()
 
                 # Parvient à attaquer un joueur
                 else:
-                    for ability in self._abilities:
-                        ability.on_deal_damage(self, targets)
-                    self._target.take_damage(self._damage)
-                    # print(f"{self._target.name} took {self._damage} damage. Remaining life: {self._target.life}.")
-                    return "attack"
-                    # print(f"{self._name} is moving towards {self._target.name}.")
+                    self.attack()
                     
 
     def get_bonuses(self, bonuses):

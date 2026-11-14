@@ -15,7 +15,7 @@ class Game:
 
         for player in self._players:
             player.start_turn()
-            target = targets[player.name]
+            target = targets[player]
             player.set_target(target)
             player.unite.set_target_pos(target.unite.pos_x, target.unite.pos_y)
 
@@ -32,7 +32,6 @@ class Game:
                 target_grid_pos = (round((x1 + x2) / 2), round((y1 + y2) / 2))
 
             bonuses = self._board.get_bonuses_in_path(player.castle_pos, target_grid_pos)
-            print(player, bonuses)
             player.get_bonuses(bonuses)
 
         for player in self._players:

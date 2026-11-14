@@ -20,10 +20,14 @@ class StatBoostAbility(AbstractAbility):
 
     @override
     def on_removed_ability(self, player):
-        player.alterLife(-self._life_boost)
-        player.alterDamage(-self._damage_boost)
+        if self._life_boost != 0:
+            player.alterLife(-self._life_boost)
+        if self._damage_boost != 0:
+            player.alterDamage(-self._damage_boost)
 
     @override
     def on_ability_granted(self, player):
-        player.alterLife(self._life_boost)
-        player.alterDamage(self._damage_boost)
+        if self._life_boost != 0:
+            player.alterLife(self._life_boost)
+        if self._damage_boost != 0:
+            player.alterDamage(self._damage_boost)

@@ -33,7 +33,7 @@ class AbstractAbility:
     def on_deal_damage(self, player, target):
         pass
 
-    def on_mouvement(self, player, target):
+    def on_mouvement(self, player, targets):
         pass
     
     def on_receive_damage(self, player, source):
@@ -42,10 +42,16 @@ class AbstractAbility:
     def on_turn_end(self, player):
         pass
 
-    def on_clash(self, player, target):
+    def on_battle_clash(self, player, targets):
         pass
 
-    def on_defend(self, player, target):
+    def on_castle_clash(self, player, targets):
+        pass
+
+    def on_castle_defense(self, player, targets):
+        pass
+
+    def on_defend(self, player, targets):
         pass
 
     def on_ability_granted(self, player):
