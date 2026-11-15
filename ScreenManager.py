@@ -1,9 +1,9 @@
 import pygame
 
 
-class ScreenStorer:
+class ScreenManager:
     def __init__(self):
-        self.screen = None
+        self._screen = None
 
     @property
     def screen(self):
@@ -91,3 +91,25 @@ class ScreenStorer:
             transpo_pos = self.transpos_board_to_screen(pos, board)
             color = bonuses[pos].color
             pygame.draw.circle(self._screen, color, transpo_pos, 40)
+
+    def draw_screen(self, game):
+        self._screen.fill("gray")
+        self.castle_value(game.players)
+        self.draw_bonus(game.board)
+        for p in game.players:
+            p.unite.draw(self._screen, p)
+
+        if game.state == game.CHOIX:
+            waiting_players = game.get_waiting_players()
+            self.waiting_for_player(waiting_players)
+
+        pygame.display.flip()
+
+    def event_manager(self, game, KEY_MAPPING):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game.stop_game()
+            elif event.type == pygame.KEYDOWN and game._state == game.CHOIX and event.key in KEY_MAPPING:
+                player, target = KEY_MAPPING[event.key]
+                game.set_targets(player, target)
+        

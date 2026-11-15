@@ -2,75 +2,31 @@ import pygame
 
 from Game import Game
 from game_factory import KEY_MAPPING, SCREEN_SIZE, export_game
-from ScreenStorer import ScreenStorer
+from ScreenManager import ScreenManager
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 pygame.display.set_caption("Game Jam")
-screen_storer = ScreenStorer()
-screen_storer.screen = screen
+
+screen_manager = ScreenManager()
+screen_manager.screen = screen
 
 players, board = export_game()
 game = Game(players, board)
 game.game_status()
 
-player_choices = {player: None for player in game.players}
-player_by_name = {player.name: player for player in game.players}
-
-running = True
-
-CHOIX, ALLER, RETOUR = "choix", "aller", "retour"
-etat = CHOIX
-SPEED_LINE = 200
 clock = pygame.time.Clock()
 
-while running:
+while game.running:
     dt = clock.tick(60) / 1000
 
     # --- Événements ---
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN and etat == CHOIX and event.key in KEY_MAPPING:
-            joueur, cible = KEY_MAPPING[event.key]
-            for p in game.players:
-                if p.name == cible and joueur in player_by_name:
-                    player_choices[player_by_name[joueur]] = p
-                    print(f"{joueur} a choisi sa cible.")
+    screen_manager.event_manager(game, KEY_MAPPING)
 
     # --- Logique ---
-    if etat == CHOIX:
-        if all(choice is not None for choice in player_choices.values()):
-            game.play(player_choices)
-            etat = ALLER
-
-    elif etat == ALLER:
-        arrives = [p.unite.move_to(p.unite.target_pos, dt, SPEED_LINE) for p in game.players]
-        if all(arrives):
-            etat = RETOUR
-
-    elif etat == RETOUR:
-        arrives = [p.unite.move_to(p.unite.home_pos, dt, SPEED_LINE) for p in game.players]
-        if all(arrives):
-            players = game.check_dead_players()
-            for p in game.players:
-                p.set_target(p)
-            player_choices = {p: None for p in game.players}
-            player_by_name = {p.name:p for p in game.players}
-            etat = CHOIX
+    game.four_player_logic(dt)
 
     # --- Dessin ---
-    screen.fill("gray")
-    screen_storer.castle_value(game.players)
-    screen_storer.draw_bonus(game.board)
-    for p in game.players:
-        p.unite.draw(screen, p)
-    
-    if etat == CHOIX:
-        joueurs_en_attente = [j for j, choice in player_choices.items() if choice is None]
-        joueurs_en_attente = [j for j in game.players if j in joueurs_en_attente]
-        screen_storer.waiting_for_player(joueurs_en_attente)
-
-    pygame.display.flip()
+    screen_manager.draw_screen(game)
 
 pygame.quit()
