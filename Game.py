@@ -41,6 +41,14 @@ class Game:
 
         self._board.spawn_random_bonus()
 
+    def check_dead_players(self):
+        remaining_players = []
+        for player in self._players:
+            if player.life > 0:
+                remaining_players.append(player)
+        self._players = remaining_players
+        return self._players
+
     def game_status(self):
         for player in self._players:
             print(f"{player.name} - Remaining Life: {player.life}, Current Damage: {player.damage}")

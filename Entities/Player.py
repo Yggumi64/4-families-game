@@ -114,7 +114,7 @@ class Player:
         if self._target.target is not None:
             # Se défend
             if self._target == self:
-                self.defend(targets)
+                return self.defend(targets)
 
             # Attaque un joueur
             else:
@@ -124,11 +124,11 @@ class Player:
 
                 # clash
                 if self._target.target == self._target or self._target.target == self:
-                    self.encounter()
+                    return self.encounter()
 
                 # Parvient à attaquer un joueur
                 else:
-                    self.attack()
+                    return self.attack()
                     
 
     def get_bonuses(self, bonuses):
@@ -142,7 +142,7 @@ class Player:
             ability.on_turn_start(self)
             if not ability.lower_duration():
                 self._abilities.remove(ability)
-                self._abilities.on_removed_ability(self)
+                ability.on_removed_ability(self)
                 print(f"{self._name}'s ability {ability.name} has expired.")
 
 

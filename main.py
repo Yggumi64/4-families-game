@@ -14,8 +14,8 @@ players, board = export_game()
 game = Game(players, board)
 game.game_status()
 
-player_choices = {player: None for player in players}
-player_by_name = {player.name: player for player in players}
+player_choices = {player: None for player in game.players}
+player_by_name = {player.name: player for player in game.players}
 
 running = True
 
@@ -33,8 +33,8 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN and etat == CHOIX and event.key in KEY_MAPPING:
             joueur, cible = KEY_MAPPING[event.key]
-            for p in players:
-                if p.name == cible:
+            for p in game.players:
+                if p.name == cible and joueur in player_by_name:
                     player_choices[player_by_name[joueur]] = p
                     print(f"{joueur} a choisi sa cible.")
 
@@ -45,28 +45,30 @@ while running:
             etat = ALLER
 
     elif etat == ALLER:
-        arrives = [p.unite.move_to(p.unite.target_pos, dt, SPEED_LINE) for p in players]
+        arrives = [p.unite.move_to(p.unite.target_pos, dt, SPEED_LINE) for p in game.players]
         if all(arrives):
             etat = RETOUR
 
     elif etat == RETOUR:
-        arrives = [p.unite.move_to(p.unite.home_pos, dt, SPEED_LINE) for p in players]
+        arrives = [p.unite.move_to(p.unite.home_pos, dt, SPEED_LINE) for p in game.players]
         if all(arrives):
-            for p in players:
+            players = game.check_dead_players()
+            for p in game.players:
                 p.set_target(p)
-            player_choices = {p: None for p in players}
+            player_choices = {p: None for p in game.players}
+            player_by_name = {p.name:p for p in game.players}
             etat = CHOIX
 
     # --- Dessin ---
     screen.fill("gray")
-    screen_storer.castle_value(players)
+    screen_storer.castle_value(game.players)
     screen_storer.draw_bonus(game.board)
-    for p in players:
+    for p in game.players:
         p.unite.draw(screen, p)
     
     if etat == CHOIX:
         joueurs_en_attente = [j for j, choice in player_choices.items() if choice is None]
-        joueurs_en_attente = [j for j in players if j in joueurs_en_attente]
+        joueurs_en_attente = [j for j in game.players if j in joueurs_en_attente]
         screen_storer.waiting_for_player(joueurs_en_attente)
 
     pygame.display.flip()

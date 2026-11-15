@@ -40,7 +40,7 @@ KEY_MAPPING = {
 SCREEN_SIZE = 800
 
 # Factions
-base_life = 12
+base_life = 3
 base_damage = 3
 
 life_boost_ability = StatBoostAbility("Life Boost", "Increases life by 3", 3, 0, None)
