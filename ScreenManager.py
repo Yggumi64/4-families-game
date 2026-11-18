@@ -84,7 +84,6 @@ class ScreenManager:
 
         return int(screen_x), int(screen_y)
 
-
     def draw_bonus(self, board):
         bonuses = board.bonuses
         for pos in bonuses:

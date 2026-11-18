@@ -110,6 +110,5 @@ class Game:
                 self._player_by_name = {p.name:p for p in self._players}
                 self._state = self.CHOIX
         
-
     def __str__(self):
         return f"Game with players: {[player.name for player in self._players]} and board:\n{self._board}"
